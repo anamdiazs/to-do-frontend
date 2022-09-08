@@ -1,33 +1,67 @@
 import './App.css';
+import { Button, 
+			Table, 
+			TableHead,
+			TableBody, 
+			TableCell, 
+			FormControl,
+			FormGroup, 
+			TextField,
+			Select, 
+			MenuItem,
+			Grid,
+			InputLabel, 
+			TableRow
+		}
+from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
 
 function App() {
   return (
-    <div className="App">
-		<div className='flex flex-col w-screen h-screen bg-blue-300'>
-			<div className='w-11/12 h-auto bg-red-200'>
-				<form className='flex flex-col w-64 justify-between'>
-					<label>Name</label>
-					<input type='text'></input>
-					<label>Priority</label>
-					<select>
-						<option>All</option>
-						<option>High</option>
-						<option>Medium</option>
-						<option>Low</option>
-					</select>
-					<label>State</label>
-					<select>
-						<option>All</option>
-						<option>Done</option>
-						<option>Undone</option>
-					</select>
-				</form>
-				<button className='w-24 h-12 bg-blue-700 rounded-md'>Search</button>
-			</div>
-			<div></div>
-			<div></div>
-		</div>
-	 
+    <div class='App' >
+		<Grid container sx={{width:'100%', padding:'2vw'}} direction='column'>
+			<Grid item>
+				<FormGroup>
+					<InputLabel sx={{paddingBottom: 2}}>Text</InputLabel>
+					<TextField type='text'></TextField>
+					<InputLabel sx={{paddingBottom: 2, paddingTop:2 }}>Priority</InputLabel>
+					<Select sx={{width: '10vw'}}>
+						<MenuItem >All</MenuItem>
+						<MenuItem>High</MenuItem>
+						<MenuItem>Medium</MenuItem>
+						<MenuItem>Low</MenuItem>
+					</Select>
+					<InputLabel sx={{paddingBottom: 2, paddingTop:2 }}>State</InputLabel>
+					<Select sx={{width: '10vw'}}>
+						<MenuItem>All</MenuItem>
+						<MenuItem>Done</MenuItem>
+						<MenuItem>Undone</MenuItem>
+					</Select>
+				</FormGroup>
+				<Button size='large' variant='contained' startIcon={<SearchIcon />} sx={{marginTop: 4 }}>Search</Button>
+			</Grid>
+			<Grid item >
+				<Button size='large' variant='contained' startIcon={<AddIcon />} sx={{marginTop: 4 }}>New To Do</Button>
+			</Grid>
+			<Grid item sx={{marginTop:'2vh'}}>
+				<Table>
+					<TableHead>
+						<TableRow>
+							<TableCell>Done</TableCell>
+							<TableCell>Priority</TableCell>
+							<TableCell>Due date</TableCell>
+							<TableCell>Actions</TableCell>
+						</TableRow>
+					</TableHead>
+					<TableBody>
+					</TableBody>
+				</Table>
+			</Grid>
+			<Grid item>
+
+			</Grid>
+		</Grid>
     </div>
   );
 }
