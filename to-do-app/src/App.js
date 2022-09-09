@@ -23,9 +23,10 @@ import ModalTask from './components/modalTask';
 function App() {
 	const [tasks, setTasks] = useState([])
 	const [isOpen, setIsOpen] = useState(false)
+	const api = process.env.REACT_APP_API
 	const getTasks = async () =>{
 		try{
-			const response = await fetch('/todos')
+			const response = await fetch(`/todos`)
 			const data = await response.json();
 			setTasks(data)
 			console.log('Response from fetch >>>> ' ,data)
@@ -34,12 +35,9 @@ function App() {
 		}
 	}
 
-
 	useEffect(() => {
 		getTasks();
 	}, [])
-	
-
 	
   return (
     <div class='App' >
