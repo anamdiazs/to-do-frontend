@@ -16,8 +16,31 @@ import { Button,
 from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
+import { useState, useEffect} from 'react';
+import ModalTask from './components/modalTask';
+
 
 function App() {
+	const [tasks, setTasks] = useState([])
+	const [isOpen, setIsOpen] = useState(false)
+	const getTasks = async () =>{
+		try{
+			const response = await fetch('/todos')
+			const data = await response.json();
+			setTasks(data)
+			console.log('Response from fetch >>>> ' ,data)
+		}catch(err){
+			console.log(err)
+		}
+	}
+
+
+	useEffect(() => {
+		getTasks();
+	}, [])
+	
+
+	
   return (
     <div class='App' >
 		<Grid container sx={{width:'100%', padding:'2vw'}} direction='column'>
@@ -55,6 +78,19 @@ function App() {
 						</TableRow>
 					</TableHead>
 					<TableBody>
+						{tasks.map((task) =>{
+							return(
+								<TableRow
+									key={task.id}
+									sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+								>
+									<TableCell>{task.text}</TableCell>
+									<TableCell>{ <Checkbox sixe='medium'/>}</TableCell>
+									<TableCell>{task.priority}</TableCell>
+									<TableCell>{task.dueDate}</TableCell>
+            				</TableRow>
+							)
+						})}
 					</TableBody>
 				</Table>
 			</Grid>
