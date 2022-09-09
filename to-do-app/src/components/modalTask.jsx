@@ -9,9 +9,17 @@ export default function ModalTask({open, onClose}) {
 	const [dueDate, setDueDate] = useState("")
 	const [priority, setPriority] = useState("")
 
-	const textRef = useRef()
-	const dueDateRef = useRef()
-	const priorityRef = useRef()
+	const api = process.env.REACT_APP_API
+
+
+	const generateRandomUI = () =>{
+		let id = "";
+		let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+			for ( var i = 0; i < 7; i++ ) {
+			id += characters.charAt(Math.floor(Math.random() * 36));
+			}
+		return id;
+	}
 
 	const handleDateChange = (e) => {
 		setDueDate(e.target.value)
@@ -24,15 +32,16 @@ export default function ModalTask({open, onClose}) {
 		setPriority(e.target.value)
 	}
 	const dataPayload = {
-		id:'12345',
+		id: generateRandomUI(),
 		text: text,
 		dueDate: dueDate, 
 		done: false, 
 		priority: priority,
-		creationDate:"08-09-22"
+		creationDate:new Date().toJSON().slice(0, 10)
 	}
 
 	const createNewTodo = async() => {
+		generateRandomUI();
 		try{
 			const response = await fetch('/todos',{
 				method:'post',
