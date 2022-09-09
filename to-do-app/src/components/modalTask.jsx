@@ -1,12 +1,13 @@
 import React from 'react'
-import { IconButton, Card, FormGroup, InputLabel, TextareaAutosize,TextField, Select, MenuItem, Button, FormControl } from '@mui/material'
+import { IconButton, Card, FormGroup, InputLabel,TextField, Select, MenuItem, Button, FormControl } from '@mui/material'
 import ReactDOM  from 'react-dom'
 import CloseIcon from '@mui/icons-material/Close';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 
 export default function ModalTask({open, onClose}) {
 	const [text, setText] = useState("")
 	const [dueDate, setDueDate] = useState("")
+	const [valid, setValid] = useState()
 	const [priority, setPriority] = useState("")
 
 	const api = process.env.REACT_APP_API
@@ -32,6 +33,8 @@ export default function ModalTask({open, onClose}) {
 	const handlePriorityChange = (e) => {
 		setPriority(e.target.value)
 	}
+	
+
 	const dataPayload = {
 		id: generateRandomUI(),
 		text: text,
@@ -44,15 +47,18 @@ export default function ModalTask({open, onClose}) {
 	const createNewTodo = async() => {
 		generateRandomUI();
 		try{
-			const response = await fetch('/todos',{
-				method:'post',
+			const response = await fetch(`${api}/todos`,{
+				method:'POST',
+				mode:'cors',
 				headers: {
 					'Accept': 'application/json',
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
+					'Access-Control-Allow-Origin': '*'
 				 },
 				 body: JSON.stringify(dataPayload)
 			})
 			console.log('Send data to  post >>>> ' , dataPayload)
+			onClose()
 		}catch(err){
 			console.log(err)
 		}
@@ -82,7 +88,7 @@ export default function ModalTask({open, onClose}) {
 			</IconButton>
 			<FormGroup sx={{padding: 5}}>
 				<InputLabel sx={{paddingBottom:2}}>Text</InputLabel>
-				<TextareaAutosize  
+				<TextField  
 					minRows={8}
 					maxLength="120"
 					onChange={handleTextChange}
@@ -104,7 +110,6 @@ export default function ModalTask({open, onClose}) {
 					<InputLabel sx={{paddingBottom:2, paddingTop:2}}>Due date</InputLabel>
 					<TextField 
 						type="date"
-						inputRef={dueDateRef}
 						onChange={handleDateChange}
 						required={true}
 					/>
