@@ -11,7 +11,8 @@ import { Button,
 			MenuItem,
 			Grid,
 			InputLabel, 
-			TableRow
+			TableRow,
+			Checkbox
 		}
 from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -72,6 +73,7 @@ function App() {
 				<Table>
 					<TableHead>
 						<TableRow>
+							<TableCell>Task</TableCell>
 							<TableCell>Done</TableCell>
 							<TableCell>Priority</TableCell>
 							<TableCell>Due date</TableCell>
