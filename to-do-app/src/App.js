@@ -65,7 +65,8 @@ function App() {
 				<Button size='large' variant='contained' startIcon={<SearchIcon />} sx={{marginTop: 4 }}>Search</Button>
 			</Grid>
 			<Grid item >
-				<Button size='large' variant='contained' startIcon={<AddIcon />} sx={{marginTop: 4 }}>New To Do</Button>
+				<Button onClick={() => setIsOpen(true)} size='large' variant='contained' startIcon={<AddIcon />} sx={{marginTop: 4 }}>New To Do</Button>
+				<ModalTask open={isOpen} onClose={()=>setIsOpen(false)}></ModalTask>
 			</Grid>
 			<Grid item sx={{marginTop:'2vh'}}>
 				<Table>
