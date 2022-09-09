@@ -26,6 +26,7 @@ export default function ModalTask({open, onClose}) {
 	}
 	const handleTextChange = (e) => {
 		setText(e.target.value)
+		text !== "" && text.length < 120 ? setValid(true): setValid(false)
 	}
 
 	const handlePriorityChange = (e) => {
@@ -85,12 +86,16 @@ export default function ModalTask({open, onClose}) {
 					minRows={8}
 					maxLength="120"
 					onChange={handleTextChange}
+					required={true}
+					error={valid === false}
+					helperText={valid === false ? "This input most contain less than 120 characters" : ""}
 				/>
 				<FormGroup sx={{maxWidth:'30%'}}>
 					<InputLabel sx={{paddingBottom:2, paddingTop:2}}>Priority</InputLabel>
 					<Select 
 						defaultValue={"High"}
 						onChange={handlePriorityChange}
+						required={true}
 					>
 						<MenuItem value={"High"}>High</MenuItem>
 						<MenuItem value={"Medium"}>Medium</MenuItem>
@@ -101,6 +106,7 @@ export default function ModalTask({open, onClose}) {
 						type="date"
 						inputRef={dueDateRef}
 						onChange={handleDateChange}
+						required={true}
 					/>
 					<Button onClick={createNewTodo} variant="contained" size='large' sx={{marginTop:2}}>Create Task</Button>
 				</FormGroup>
