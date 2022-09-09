@@ -1,9 +1,53 @@
 import React from 'react'
-import { IconButton, Card, FormGroup, InputLabel, TextField, Select, MenuItem, Button } from '@mui/material'
+import { IconButton, Card, FormGroup, InputLabel, TextareaAutosize,TextField, Select, MenuItem, Button, FormControl } from '@mui/material'
 import ReactDOM  from 'react-dom'
 import CloseIcon from '@mui/icons-material/Close';
+import { useState, useRef } from 'react';
 
 export default function ModalTask({open, onClose}) {
+	const [text, setText] = useState("")
+	const [dueDate, setDueDate] = useState("")
+	const [priority, setPriority] = useState("")
+
+	const textRef = useRef()
+	const dueDateRef = useRef()
+	const priorityRef = useRef()
+
+	const handleDateChange = (e) => {
+		setDueDate(e.target.value)
+	}
+	const handleTextChange = (e) => {
+		setText(e.target.value)
+	}
+
+	const handlePriorityChange = (e) => {
+		setPriority(e.target.value)
+	}
+	const dataPayload = {
+		id:'12345',
+		text: text,
+		dueDate: dueDate, 
+		done: false, 
+		priority: priority,
+		creationDate:"08-09-22"
+	}
+
+	const createNewTodo = async() => {
+		try{
+			const response = await fetch('/todos',{
+				method:'post',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				 },
+				 body: JSON.stringify(dataPayload)
+			})
+			console.log('Send data to  post >>>> ' , dataPayload)
+		}catch(err){
+			console.log(err)
+		}
+	}
+	
 	if(!open) return null
   return ReactDOM.createPortal(
 	<>
@@ -22,26 +66,37 @@ export default function ModalTask({open, onClose}) {
 			opacity:'50px',
 			zIndex:1000
 		}}>
-		<Card sx={{width:'40vw', height:'60vh', display:'flex', flexDirection:'column'}}>
-			<IconButton sx={{}} onClick={onClose}>
+		<Card sx={{width:'40vw', height:'60vh', display:'flex', flexDirection:'column', borderRadius: 2}}>
+			<IconButton sx={{ display:'flex', alignSelf:'end', marginRight:2, marginTop:2}} onClick={onClose}>
 				<CloseIcon />
 			</IconButton>
 			<FormGroup sx={{padding: 5}}>
 				<InputLabel sx={{paddingBottom:2}}>Text</InputLabel>
-				<TextField />
-				<FormGroup>
+				<TextareaAutosize  
+					minRows={8}
+					maxLength="120"
+					onChange={handleTextChange}
+				/>
+				<FormGroup sx={{maxWidth:'30%'}}>
 					<InputLabel sx={{paddingBottom:2, paddingTop:2}}>Priority</InputLabel>
-					<Select>
+					<Select 
+						defaultValue={"High"}
+						onChange={handlePriorityChange}
+					>
 						<MenuItem value={"High"}>High</MenuItem>
 						<MenuItem value={"Medium"}>Medium</MenuItem>
 						<MenuItem value={"Low"}>Low</MenuItem>
 					</Select>
 					<InputLabel sx={{paddingBottom:2, paddingTop:2}}>Due date</InputLabel>
-					<TextField type="date"/>
-					<Button variant="contained" size='large' sx={{marginTop:2}}>Create Task</Button>
+					<TextField 
+						type="date"
+						inputRef={dueDateRef}
+						onChange={handleDateChange}
+					/>
+					<Button onClick={createNewTodo} variant="contained" size='large' sx={{marginTop:2}}>Create Task</Button>
 				</FormGroup>
 			</FormGroup>
-		</Card>
+	</Card>
 	 </div>
 	</>,
 	document.getElementById("modal")
