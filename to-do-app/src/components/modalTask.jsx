@@ -14,8 +14,6 @@ export default function ModalTask({open, onClose, task}) {
 
 	const api = process.env.REACT_APP_API
 
-	console.log(task)
-
 	const generateRandomUI = () =>{
 		let id = "";
 		let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -37,14 +35,17 @@ export default function ModalTask({open, onClose, task}) {
 		setPriority(e.target.value)
 	}
 	
-	const dataPayload = {
-		id: generateRandomUI(),
-		text: text,
-		dueDate: dueDate, 
-		done: false, 
-		priority: priority,
-		creationDate:new Date().toJSON().slice(0, 10)
-	}
+	
+		
+		const dataPayload = {
+			id: generateRandomUI(),
+			text: text,
+			dueDate: dueDate, 
+			done: false, 
+			priority: priority,
+			creationDate:new Date().toJSON().slice(0, 10)
+		}
+	
 
 	const createNewTodo = async() => {
 		generateRandomUI();
@@ -65,6 +66,34 @@ export default function ModalTask({open, onClose, task}) {
 		}catch(err){
 			console.log(err)
 		}
+	}
+
+	const updateTodo = async() => {
+		const newDataPayload = {
+			id: task.task.id,
+			text: text,
+			dueDate: dueDate, 
+			done: false, 
+			priority: priority,
+			creationDate: task.task.creationDate
+		}
+		try{
+			const response = await fetch(`${api}/todos/${task.task.id}`,{
+				method:'PUT',
+				mode:'cors',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+					'Access-Control-Allow-Origin': '*'
+				 },
+				 body: JSON.stringify(newDataPayload)})
+			window.location.reload();
+			onClose()
+		}catch(err){
+			console.log(err)
+		}
+		
+
 	}
 
 	if(!open) return null
@@ -98,12 +127,14 @@ export default function ModalTask({open, onClose, task}) {
 					required={true}
 					error={valid === false}
 					helperText={valid === false ? "This input most contain less than 120 characters" : ""}
+					defaultValue={task? task.task.text : ""}
 				/>
 				<FormGroup sx={{maxWidth:'30%'}}>
 					<InputLabel sx={{paddingBottom:2, paddingTop:2}}>Priority</InputLabel>
 					<Select 
 						onChange={handlePriorityChange}
 						required={true}
+						defaultValue={task? task.task.priority : ""}
 					>
 						<MenuItem value={"High"}>High</MenuItem>
 						<MenuItem value={"Medium"}>Medium</MenuItem>
@@ -114,8 +145,14 @@ export default function ModalTask({open, onClose, task}) {
 						type="date"
 						onChange={handleDateChange}
 						required={true}
+						defaultValue={task? task.task.dueDate : ""}
 					/>
-					<Button onClick={createNewTodo} variant="contained" size='large' sx={{marginTop:2}}>Create Task</Button>
+					{task ? 
+						<Button onClick={updateTodo} variant='contained' size='large' sx={{marginTop:2}}>Edit Todo</Button> 
+						: 
+						<Button onClick={createNewTodo} variant="contained" size='large' sx={{marginTop:2}}>Create Task</Button>
+					}
+					
 				</FormGroup>
 			</FormGroup>
 	</Card>
