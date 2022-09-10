@@ -16,13 +16,15 @@ import { Button,
 from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
-import { useState, useEffect} from 'react';
+import { useState, useEffect, useContext} from 'react';
 import ModalTask from './components/modalTask';
+import { TaskContext } from './providers/TaskContext';
 
 
 function App() {
 	const [tasks, setTasks] = useState([])
 	const [isOpen, setIsOpen] = useState(false)
+	const [editTask, setEditTask] = useState({})
 	const api = process.env.REACT_APP_API
 	const getTasks = async () =>{
 		try{
@@ -38,27 +40,21 @@ function App() {
 	useEffect(() => {
 		getTasks();
 	}, [])
+
+	const updateTask = () => {
+		setIsOpen(true)
+	}
+
+	console.log('Edited task data>>>>', editTask)
 	
   return (
+	<TaskContext.Provider value={{editTask, setEditTask}}>
     <div class='App' >
 		<Grid container sx={{width:'100%', padding:'2vw'}} direction='column'>
 			<Grid item>
 				<FormGroup>
 					<InputLabel sx={{paddingBottom: 2}}>Text</InputLabel>
 					<TextField type='text'></TextField>
-					<InputLabel sx={{paddingBottom: 2, paddingTop:2 }}>Priority</InputLabel>
-					<Select sx={{width: '10vw'}}>
-						<MenuItem >All</MenuItem>
-						<MenuItem>High</MenuItem>
-						<MenuItem>Medium</MenuItem>
-						<MenuItem>Low</MenuItem>
-					</Select>
-					<InputLabel sx={{paddingBottom: 2, paddingTop:2 }}>State</InputLabel>
-					<Select sx={{width: '10vw'}}>
-						<MenuItem>All</MenuItem>
-						<MenuItem>Done</MenuItem>
-						<MenuItem>Undone</MenuItem>
-					</Select>
 				</FormGroup>
 				<Button size='large' variant='contained' startIcon={<SearchIcon />} sx={{marginTop: 4 }}>Search</Button>
 			</Grid>
@@ -88,6 +84,8 @@ function App() {
 									<TableCell>{ <Checkbox sixe='medium'/>}</TableCell>
 									<TableCell>{task.priority}</TableCell>
 									<TableCell>{task.dueDate}</TableCell>
+									<TableCell>{<Button variant='contained' onClick={updateTask}>Edit</Button>}</TableCell>
+									<ModalTask task={task} open={isOpen} onClose={()=>setIsOpen(false)}></ModalTask>
             				</TableRow>
 							)
 						})}
@@ -99,6 +97,8 @@ function App() {
 			</Grid>
 		</Grid>
     </div>
+	</TaskContext.Provider>
+	
   );
 }
 
