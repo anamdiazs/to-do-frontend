@@ -2,16 +2,19 @@ import React from 'react'
 import { IconButton, Card, FormGroup, InputLabel,TextField, Select, MenuItem, Button, FormControl } from '@mui/material'
 import ReactDOM  from 'react-dom'
 import CloseIcon from '@mui/icons-material/Close';
-import { useState } from 'react';
+import { useState, useContext} from 'react';
+import { TaskContext } from '../providers/TaskContext';
 
-export default function ModalTask({open, onClose}) {
+export default function ModalTask({open, onClose, task}) {
 	const [text, setText] = useState("")
 	const [dueDate, setDueDate] = useState("")
 	const [valid, setValid] = useState()
 	const [priority, setPriority] = useState("")
+	const {editTask, setEditTask} = useContext(TaskContext)
 
 	const api = process.env.REACT_APP_API
 
+	console.log(task)
 
 	const generateRandomUI = () =>{
 		let id = "";
@@ -34,7 +37,6 @@ export default function ModalTask({open, onClose}) {
 		setPriority(e.target.value)
 	}
 	
-
 	const dataPayload = {
 		id: generateRandomUI(),
 		text: text,
@@ -57,13 +59,14 @@ export default function ModalTask({open, onClose}) {
 				 },
 				 body: JSON.stringify(dataPayload)
 			})
-			console.log('Send data to  post >>>> ' , dataPayload)
+			setEditTask(dataPayload)
+			window.location.reload();
 			onClose()
 		}catch(err){
 			console.log(err)
 		}
 	}
-	
+
 	if(!open) return null
   return ReactDOM.createPortal(
 	<>
@@ -99,7 +102,6 @@ export default function ModalTask({open, onClose}) {
 				<FormGroup sx={{maxWidth:'30%'}}>
 					<InputLabel sx={{paddingBottom:2, paddingTop:2}}>Priority</InputLabel>
 					<Select 
-						defaultValue={"High"}
 						onChange={handlePriorityChange}
 						required={true}
 					>
