@@ -19,6 +19,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useState, useEffect, useContext} from 'react';
 import ModalTask from './components/modalTask';
 import { TaskContext } from './providers/TaskContext';
+import TaskRow from './components/taskRow';
 
 
 function App() {
@@ -40,12 +41,6 @@ function App() {
 	useEffect(() => {
 		getTasks();
 	}, [])
-
-	const updateTask = () => {
-		setIsOpen(true)
-	}
-
-	console.log('Edited task data>>>>', editTask)
 	
   return (
 	<TaskContext.Provider value={{editTask, setEditTask}}>
@@ -76,17 +71,7 @@ function App() {
 					<TableBody>
 						{tasks.map((task) =>{
 							return(
-								<TableRow
-									key={task.id}
-									sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-								>
-									<TableCell>{task.text}</TableCell>
-									<TableCell>{ <Checkbox sixe='medium'/>}</TableCell>
-									<TableCell>{task.priority}</TableCell>
-									<TableCell>{task.dueDate}</TableCell>
-									<TableCell>{<Button variant='contained' onClick={updateTask}>Edit</Button>}</TableCell>
-									<ModalTask task={task} open={isOpen} onClose={()=>setIsOpen(false)}></ModalTask>
-            				</TableRow>
+								<TaskRow task={task}></TaskRow>
 							)
 						})}
 					</TableBody>
